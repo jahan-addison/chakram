@@ -16,54 +16,54 @@ def program_example_3_parse_tree() -> str:
             wr.unit
             mess
             ;
-            statement
-              auto_statement
-                identifier    u
-                ;
-                statement
-                  rvalue_statement
-                    expression
-                      rvalue
-                        assignment_expression
-                          identifier    u
-                          assignment_operator
-                            =
-                            None
-                          rvalue
-                            lvalue_expression
-                              identifier    wr.unit
-                      ;
-                    expression
-                      rvalue
-                        assignment_expression
-                          identifier    wr.unit
-                          assignment_operator
-                            =
-                            None
-                          rvalue
-                            constant_expression
-                              number_literal    1
-                      ;
-                    expression
-                      rvalue
-                        function_expression
-                          identifier    printf
-                          parameters
-                            rvalue
-                              constant_expression
-                                string_literal    "error number %d, %s*n'*,errno,mess[errno]"
-                      ;
-                    expression
-                      rvalue
-                        assignment_expression
-                          identifier    wr.unit
-                          assignment_operator
-                            =
-                            None
-                          rvalue
-                            lvalue_expression
-                              identifier    u
-                      ;
+        statement
+          auto_statement
+            identifier    u
+            ;
+        statement
+          rvalue_statement
+            expression
+              rvalue
+                assignment_expression
+                  identifier    u
+                  assignment_operator
+                    =
+                    None
+                  rvalue
+                    lvalue_expression
+                      identifier    wr.unit
+              ;
+            expression
+              rvalue
+                assignment_expression
+                  identifier    wr.unit
+                  assignment_operator
+                    =
+                    None
+                  rvalue
+                    constant_expression
+                      number_literal    1
+              ;
+            expression
+              rvalue
+                function_expression
+                  identifier    printf
+                  parameters
+                    rvalue
+                      constant_expression
+                        string_literal    "error number %d, %s*n'*,errno,mess[errno]"
+              ;
+            expression
+              rvalue
+                assignment_expression
+                  identifier    wr.unit
+                  assignment_operator
+                    =
+                    None
+                  rvalue
+                    lvalue_expression
+                      identifier    u
+              ;
   definition
     vector_definition
       mess

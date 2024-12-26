@@ -4,6 +4,8 @@
 //              LALR(k) Grammar
 /////////////////////////////////////////////////////////////
 
+// Grammar syntax - https://lark-parser.readthedocs.io/en/stable/grammar.html
+
 program : ( definition ) *
 
 definition : function_definition
@@ -32,13 +34,13 @@ statement : block_statement
     | return_statement
     | rvalue_statement
 
-auto_statement     : "auto" lvalue ("," lvalue )* TERMINATE [ statement ]
+auto_statement     : "auto" lvalue ("," lvalue )* TERMINATE
 
-extrn_statement    : "extrn" NAME ("," NAME)* TERMINATE [ statement ]
+extrn_statement    : "extrn" NAME ("," NAME)* TERMINATE
 
 case_statement     : "case" constant ":" (statement +)
 
-label_statement    :  /[a-zA-Z_][a-z._A-Z0-9]{0,7}[\s]*:/ (statement *)
+label_statement    :  /[a-zA-Z_][a-zA-Z0-9._]{0,7}[\s]*:/
 
 goto_statement     : "goto" NAME TERMINATE
 
@@ -61,6 +63,7 @@ expression: TERMINATE
     | rvalue TERMINATE
 
 rvalue : evaluated_expression
+    | constant_expression
     | assignment_expression
     | pre_inc_dec_expression
     | post_inc_dec_expression
@@ -69,7 +72,6 @@ rvalue : evaluated_expression
     | relation_expression
     | ternary_expression
     | function_expression
-    | constant_expression
     | lvalue_expression
 
 
@@ -140,23 +142,25 @@ unary_ones_complement : "~"
 
 
 
-constant  : /[0-9]/ +             -> number_literal
-    | "'" ( CHAR ) ~ 1 .. 4 "'"   -> constant_literal
-    | "' '"                       -> constant_literal
-    | /"(\\\"|\\\\|[^"\n])*?"i?/  -> string_literal
+constant  : INT                  -> number_literal
+    | "'" ( CHAR ) ~ 1 .. 4 "'"  -> constant_literal
+    | "' '"                      -> constant_literal
+    | ESCAPED_STRING             -> string_literal
 
 
 EQUAL      : "="
 
 TERMINATE  : ";"
 
-NAME       : /[a-zA-Z_][a-z._A-Z0-9]{0,7}/
+NAME       : /[a-zA-Z_][a-zA-Z0-9_.]{0,7}/
 
 CHAR       : /[\x00-\x7F]/
 
-COMMENT    : "/*" /(\S|\s)*?/ "*/"
+%import common.ESCAPED_STRING
+%import common.WS
+%import common.INT
+%import common.WORD
+%import common.C_COMMENT
 
-WHITESPACE : /[ \t\f\r\n]/+
-
-%ignore WHITESPACE   // Ignore whitespace
-%ignore COMMENT      // Ignore comments
+%ignore WS
+%ignore C_COMMENT
