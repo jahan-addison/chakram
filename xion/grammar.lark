@@ -11,7 +11,7 @@ program : ( definition ) *
 definition : function_definition
  | vector_definition
 
-vector_definition   :  NAME ( "[" ( constant ) ? "]" ) ? (ival ( ","? ival ) * )? TERMINATE
+vector_definition   :  NAME ( "[" ( constant ) ? "]" ) ? (ival ( ","? ival ) * )? SEMI_COLON
 
 function_definition :  ( NAME "(" parameters ")" block_statement )
 
@@ -25,7 +25,6 @@ statement : block_statement
     | label_statement
     | auto_statement
     | extrn_statement
-    | case_statement
     | if_statement
     | while_statement
     | switch_statement
@@ -34,19 +33,19 @@ statement : block_statement
     | return_statement
     | rvalue_statement
 
-auto_statement     : "auto" lvalue ("," lvalue )* TERMINATE
+auto_statement     : "auto" lvalue ("," lvalue )* SEMI_COLON
 
-extrn_statement    : "extrn" NAME ("," NAME)* TERMINATE
+extrn_statement    : "extrn" NAME ("," NAME)* SEMI_COLON
 
-case_statement     : "case" constant ":" (statement +)
+case_statement     : "case" constant ":" (statement *)
 
 label_statement    :  /[a-zA-Z_][a-zA-Z0-9._]{0,7}[\s]*:/
 
-goto_statement     : "goto" NAME TERMINATE
+goto_statement     : "goto" NAME SEMI_COLON
 
 if_statement       : "if" "(" rvalue ")" statement [ "else" statement ]
 
-return_statement   : "return" [ ( "(" rvalue ")" ) ] TERMINATE
+return_statement   : "return" [ ( "(" rvalue ")" ) ] SEMI_COLON
 
 rvalue_statement   :  expression +
 
@@ -56,21 +55,22 @@ while_statement    :  "while" "(" ( rvalue ) ")" statement
 
 switch_statement   :  "switch" ("(" rvalue ")" | rvalue) "{" case_statement * "}"
 
-break_statement    :  "break" TERMINATE
+break_statement    :  "break" SEMI_COLON
 
 
-expression: TERMINATE
-    | rvalue TERMINATE
+expression: SEMI_COLON
+    | rvalue SEMI_COLON
 
 rvalue : evaluated_expression
+    | ternary_expression
     | constant_expression
     | assignment_expression
     | pre_inc_dec_expression
     | post_inc_dec_expression
+    | address_of_expression
     | unary_expression
     | unary_address_of
     | relation_expression
-    | ternary_expression
     | function_expression
     | lvalue_expression
 
@@ -123,7 +123,7 @@ unary_dec             : "--"
 unary_ones_complement : "~"
 
 
-?binary : "|" -> or_operator
+binary : "|" -> or_operator
     | "&"     -> and_operator
     | "=="    -> eq_operator
     | "!="    -> neq_oeprator
@@ -144,13 +144,13 @@ unary_ones_complement : "~"
 
 constant  : INT                  -> number_literal
     | "'" ( CHAR ) ~ 1 .. 4 "'"  -> constant_literal
-    | "' '"                      -> constant_literal
+    | /\'\s\'/                   -> constant_literal
     | ESCAPED_STRING             -> string_literal
 
 
 EQUAL      : "="
 
-TERMINATE  : ";"
+SEMI_COLON  : ";"
 
 NAME       : /[a-zA-Z_][a-zA-Z0-9_.]{0,7}/
 

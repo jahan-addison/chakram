@@ -1,6 +1,7 @@
 from lark import Lark, Tree
-from xion.transformer import AST_Transformer
+from xion.transformer import AST_Transformer, AST_Node
 import os
+import json
 import logging
 
 # Initialize logging for lark.
@@ -108,7 +109,7 @@ def parse_source_program_as_string(source_program: str, pretty: bool = True, deb
         return str(parse_source_program(source_program, debug))
 
 
-def get_source_program_as_ast(source_program: str, debug=True) -> Tree:
+def get_source_program_as_ast(source_program: str, debug=True) -> AST_Node:
     """ Get AST of B program (Lark.Tree)
 
     Args:
@@ -120,7 +121,7 @@ def get_source_program_as_ast(source_program: str, debug=True) -> Tree:
 
     """
     tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast = AST_Transformer().transform(tree)
+    ast: AST_Node = AST_Transformer().transform(tree)
     return ast
 
 
@@ -137,7 +138,20 @@ def get_source_program_ast_as_string(source_program: str, pretty: bool = True, d
     """
     tree = Parser(source_program, debug=debug).get_parse_tree()
     ast = AST_Transformer().transform(tree)
-    if pretty:
-        return ast.pretty()
-    else:
-        return str(ast)
+    return str(ast)
+
+
+def get_source_program_ast_as_json(source_program: str, pretty: bool = True, debug=True):
+    """ Get AST of B program as json
+
+    Args:
+        source_program: The source B program as a string
+        debug: debug flag
+
+    Returns:
+        AST as json dump
+
+    """
+    tree = Parser(source_program, debug=debug).get_parse_tree()
+    ast = AST_Transformer().transform(tree)
+    return json.dumps(ast)
