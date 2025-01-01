@@ -21,4 +21,4 @@ if __name__ == '__main__':
         elif args.json:
             print(parser.get_source_program_ast_as_json(file.read()))
         else:
-            print(parser.get_source_program_ast_as_string(file.read(), pretty=args.pretty))
+            print(parser.get_source_program_ast_as_string(file.read()))

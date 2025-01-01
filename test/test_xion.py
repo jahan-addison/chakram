@@ -44,7 +44,7 @@ def test_get_source_program_as_ast(program_example_1_ast: str) -> None:
 
 def test_get_source_program_ast_as_string(program_example_1_ast: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
-        assert(get_source_program_ast_as_string(file.read(), pretty=False) == program_example_1_ast)
+        assert(get_source_program_ast_as_string(file.read()) == program_example_1_ast)
 
 def test_get_source_program_ast_as_json() -> None:
     import json

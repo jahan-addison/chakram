@@ -125,7 +125,7 @@ def get_source_program_as_ast(source_program: str, debug=True) -> AST_Node:
     return ast
 
 
-def get_source_program_ast_as_string(source_program: str, pretty: bool = True, debug=True) -> str:
+def get_source_program_ast_as_string(source_program: str, debug=True) -> str:
     """ Get AST of B program as string
 
     Args:
@@ -141,7 +141,7 @@ def get_source_program_ast_as_string(source_program: str, pretty: bool = True, d
     return str(ast)
 
 
-def get_source_program_ast_as_json(source_program: str, pretty: bool = True, debug=True):
+def get_source_program_ast_as_json(source_program: str, debug=True):
     """ Get AST of B program as json
 
     Args:
