@@ -16,9 +16,9 @@ Xion also provides factory methods for the parse tree as an AST with json, strin
 * `parse_source_program(source_program: str, debug=True) -> Lark.Tree`
 * `parse_source_program_as_string(source_program: str, pretty: bool = True, debug=True) -> str`
 
-* `get_source_program_as_ast(source_program: str, debug=True) -> AST_Node`
-* `get_source_program_ast_as_string(source_program: str, pretty: bool = True, debug=True) -> str`
-* `get_source_program_ast_as_json(source_program: str, pretty: bool = True, debug=True) -> JSON`
+* `get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AST_Node`
+* `get_source_program_ast_as_string(source_program: str, meta=False, debug=True) -> str`
+* `get_source_program_ast_as_json(source_program: str, meta=False, debug=True) -> JSON`
 
 ### Example
 

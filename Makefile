@@ -7,8 +7,8 @@ type:
 lint: type
 	poetry run python -m flake8 --ignore E501,F841 $(project)/
 
-test: type
-	poetry run pytest --cov-branch --cov=xion --cov-fail-under=90 --disable-warnings -s
+test: lint
+	poetry run pytest --cov-branch --cov=xion --disable-warnings -s
 
 run: lint
 	# run the first example

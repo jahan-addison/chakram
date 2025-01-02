@@ -8,10 +8,11 @@ from xion.parser import get_source_program_as_ast, get_source_program_ast_as_str
 from .fixture.program_1_parse_tree import program_example_1_parse_tree
 from .fixture.program_2_parse_tree import program_example_2_parse_tree
 from .fixture.program_3_parse_tree import program_example_3_parse_tree
-from .fixture.program_1_ast import program_example_1_ast
+from .fixture.program_1_ast import program_example_1_ast, program_example_1_ast_meta
+from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
 def test_version() -> None:
-    assert __version__ == '1.1.0'
+    assert __version__ == '1.1.1'
 
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
@@ -38,9 +39,11 @@ def test_parse_source_program_as_string(program_example_3_parse_tree: str) -> No
         parse_tree = parse_source_program_as_string(file.read())
         assert(parse_tree.replace('\t', ' ' * 4) == program_example_3_parse_tree)
 
-def test_get_source_program_as_ast(program_example_1_ast: str) -> None:
+def test_get_source_program_as_ast(program_example_1_ast: str, program_example_1_ast_meta: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
-        assert(str(get_source_program_as_ast(file.read())) == program_example_1_ast)
+        contents = file.read()
+        assert(str(get_source_program_as_ast(contents)) == program_example_1_ast)
+        assert(str(get_source_program_as_ast(contents, meta=True)) == program_example_1_ast_meta)
 
 def test_get_source_program_ast_as_string(program_example_1_ast: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:

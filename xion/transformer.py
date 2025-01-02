@@ -1,5 +1,5 @@
 from __future__ import annotations
-from lark import Transformer, Discard
+from lark import Transformer, Discard, Tree, Token
 from typing import TypedDict, Union, List, Optional, TypeVar, Literal, NotRequired
 
 T = TypeVar('T', bound='AST_Node')
@@ -11,12 +11,21 @@ Node_Root = Union[Operator_Type, str, int]
 Node_Type = Union[Literal['statement'], Literal['expression'], Operator_Type, str]
 
 
+class _Meta(TypedDict):
+    line: Union[int, None]
+    column: Union[int, None]
+    start_pos: Union[int, None]
+    end_pos: Union[int, None]
+    end_column: Union[int, None]
+
+
 class AST_Node(TypedDict):
     """The AST data structure"""
     node: Node_Type
     root: Node_Root
     left: NotRequired[Node]
     right: NotRequired[Node]
+    _meta: NotRequired[_Meta]
 
 
 Definitions = List[AST_Node]
@@ -24,7 +33,7 @@ Definitions = List[AST_Node]
 
 class AST_Transformer(Transformer):
     """
-        AST transformer class.
+        AST transformer and visitor class.
 
         Transform a parse tree into an AST for future passes and semantic
         optimizations.
@@ -34,6 +43,12 @@ class AST_Transformer(Transformer):
         are the mutual recursive branches we care about most. Lvalues and lvalue
         expressions are generally flattened, along with constant literals types.
     """
+    def __init__(self, use_meta=False):
+        self._use_meta = use_meta
+        super().__init__()
+
+    """ Optionally construct meta table during recursive descent. """
+    _use_meta: bool
 
     """ Language operator map. """
     operator_map = {
@@ -63,6 +78,7 @@ class AST_Transformer(Transformer):
     }
 
     def __construct_node(self,
+                         token: Union[List[Tree], List[Token], AST_Node],
                          type: Node_Type,
                          root: Node_Root,
                          left: Optional[Node] = None,
@@ -72,6 +88,27 @@ class AST_Transformer(Transformer):
             'node': type,
             'root': root,
         }
+
+        if self._use_meta is True and isinstance(token, list):
+            for item in token:
+                if isinstance(item, Tree) or isinstance(item, Token):
+                    if isinstance(item, Tree) and not item.meta.empty:
+                        node['_meta'] = {
+                            'line': item.meta.line,
+                            'start_pos': item.meta.start_pos,
+                            'column': item.meta.column,
+                            'end_pos': item.meta.end_pos,
+                            'end_column': item.meta.end_column
+                        }
+                    elif isinstance(item, Token):
+                        node['_meta'] = {
+                            'line': item.line,
+                            'start_pos': item.start_pos,
+                            'column': item.column,
+                            'end_pos': item.end_pos,
+                            'end_column': item.end_column
+                        }
+
         if left is not None:
             node['left'] = left
 
@@ -80,9 +117,9 @@ class AST_Transformer(Transformer):
 
         return node
 
-    """Program. """
+    """Program Root. """
     def program(self, args) -> AST_Node:
-        return self.__construct_node('program', 'definitions', left=args)
+        return self.__construct_node(args, 'program', 'definitions', left=args)
 
     """ Definitions. """
     def definition(self, args) -> AST_Node:
@@ -94,10 +131,10 @@ class AST_Transformer(Transformer):
         return args[0]
 
     def function_definition(self, args) -> AST_Node:
-        return self.__construct_node('function_definition', args[0].value, left=args[1].children, right=args[2])
+        return self.__construct_node(args, 'function_definition', args[0].value, left=args[1].children, right=args[2])
 
     def vector_definition(self, args) -> AST_Node:
-        return self.__construct_node('vector_definition', args[0].value, left=args[1], right=args[2:])
+        return self.__construct_node(args, 'vector_definition', args[0].value, left=args[1], right=args[2:])
 
     """ Mutual-recursive Branches. """
     def rvalue(self, args) -> AST_Node:
@@ -110,62 +147,64 @@ class AST_Transformer(Transformer):
         return args
 
     """ Statements. """
-    def __construct_statement_node(self, root:
-                                   Node_Root,
+    def __construct_statement_node(self,
+                                   token: Union[List[Tree], List[Token], AST_Node],
+                                   root: Node_Root,
                                    left: Optional[Node] = None,
                                    right: Optional[Node] = None) -> AST_Node:
         """ Statement AST Node factory method.  """
-        return self.__construct_node('statement', root, left=left, right=right)
+        return self.__construct_node(token, 'statement', root, left=left, right=right)
 
     def block_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('block', left=args)
+        return self.__construct_statement_node(args, 'block', left=args)
 
     def rvalue_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('rvalue', left=args)
+        return self.__construct_statement_node(args, 'rvalue', left=args)
 
     def switch_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('switch', left=args[0], right=args[1:])
+        return self.__construct_statement_node(args, 'switch', left=args[0], right=args[1:])
 
     def case_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('case', left=args[0], right=args[1:])
+        return self.__construct_statement_node(args, 'case', left=args[0], right=args[1:])
 
     def return_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('return', left=args)
+        return self.__construct_statement_node(args, 'return', left=args)
 
     def while_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('while', left=args[0], right=args[1])
+        return self.__construct_statement_node(args, 'while', left=args[0], right=args[1])
 
     def if_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('if', left=args[0], right=args[1])
+        return self.__construct_statement_node(args, 'if', left=args[0], right=args[1])
 
     def goto_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('goto', left=self.__to_identifier(args[0]))
+        return self.__construct_statement_node(args, 'goto', left=self.__to_identifier(args[0]))
 
     def label_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('label', left=self.__to_identifier(args[0]))
+        return self.__construct_statement_node(args, 'label', left=self.__to_identifier(args[0]))
 
     def extrn_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('extrn', left=list(map(lambda lvalue: self.__to_identifier(lvalue), args)))
+        return self.__construct_statement_node(args, 'extrn', left=list(map(lambda lvalue: self.__to_identifier(lvalue), args)))
 
     def auto_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('auto', left=args)
+        return self.__construct_statement_node(args, 'auto', left=args)
 
     def break_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node('break')
+        return self.__construct_statement_node(args, 'break')
 
     """ Expressions. """
 
     def function_expression(self, args) -> AST_Node:
-        return self.__construct_node('function_expression', args[0]['root'], left=args[0], right=args[1].children)
+        return self.__construct_node(args, 'function_expression', args[0]['root'], left=args[0], right=args[1].children)
 
     def relation_expression(self, args) -> AST_Node:
-        return self.__construct_node('relation_expression',
+        return self.__construct_node(args,
+                                     'relation_expression',
                                      [self.operator_map[args[1].data]],
                                      left=args[0],
                                      right=args[2])
 
     def ternary_expression(self, args) -> AST_Node:
-        return self.__construct_node('ternary_expression', args[0], left=args[1], right=args[2])
+        return self.__construct_node(args, 'ternary_expression', args[0], left=args[1], right=args[2])
 
     def lvalue_expression(self, args) -> AST_Node:
         """ Passthrough"""
@@ -176,26 +215,28 @@ class AST_Transformer(Transformer):
         return args[0]
 
     def unary_expression(self, args) -> AST_Node:
-        return self.__construct_node('unary_expression', [self.operator_map[args[0].data.value]], left=args[1])
+        return self.__construct_node(args, 'unary_expression', [self.operator_map[args[0].data.value]], left=args[1])
 
     def evaluated_expression(self, args) -> AST_Node:
-        return self.__construct_node('evaluated_expression', args[0])
+        return self.__construct_node(args, 'evaluated_expression', args[0])
 
     def address_of_expression(self, args) -> AST_Node:
-        return self.__construct_node('address_of_expression', ['&'], left=args[1])
+        return self.__construct_node(args, 'address_of_expression', ['&'], left=args[1])
 
     def post_inc_dec_expression(self, args) -> AST_Node:
-        return self.__construct_node('post_inc_dec_expression',
+        return self.__construct_node(args,
+                                     'post_inc_dec_expression',
                                      [self.operator_map[args[1].data.value]],
                                      right=args[0])
 
     def pre_inc_dec_expression(self, args) -> AST_Node:
-        return self.__construct_node('pre_inc_dec_expression',
+        return self.__construct_node(args,
+                                     'pre_inc_dec_expression',
                                      [self.operator_map[args[0].data.value]],
                                      left=args[1])
 
     def assignment_expression(self, args) -> AST_Node:
-        return self.__construct_node('assignment_expression', args[1], left=args[0], right=args[2])
+        return self.__construct_node(args, 'assignment_expression', args[1], left=args[0], right=args[2])
 
     def assignment_operator(self, args) -> Operator_Type:
         return ['=', args[1] if args[1] is None else self.operator_map[args[1].data]]
@@ -203,31 +244,34 @@ class AST_Transformer(Transformer):
     """ Inline Lvalue grammar productions. """
 
     def __to_identifier(self, args) -> AST_Node:
-        return self.__construct_node('lvalue', args.value)
+        return self.__construct_node(args, 'lvalue', args.value)
 
     def identifier(self, args) -> AST_Node:
-        return self.__construct_node('lvalue', args[0].value)
+        return self.__construct_node(args, 'lvalue', args[0].value)
 
     def indirect_identifier(self, args) -> AST_Node:
-        return self.__construct_node('indirect_lvalue', ['*'], left=args[1])
+        return self.__construct_node(args, 'indirect_lvalue', ['*'], left=args[1])
 
     def vector_identifier(self, args) -> AST_Node:
-        return self.__construct_node('vector_lvalue', args[0]['root'], left=args[1])
+        return self.__construct_node(args, 'vector_lvalue', args[0]['root'], left=args[1])
 
     """ Constants. """
 
-    def __construct_constant_node(self, type: Node_Type, root: Node_Root) -> AST_Node:
+    def __construct_constant_node(self,
+                                  token: Union[List[Tree], List[Token], AST_Node],
+                                  type: Node_Type,
+                                  root: Node_Root) -> AST_Node:
         """ Constant Literal AST Node factory method.  """
-        return self.__construct_node(type, root, left=None, right=None)
+        return self.__construct_node(token, type, root, left=None, right=None)
 
     def number_literal(self, args) -> AST_Node:
-        return self.__construct_constant_node('number_literal', int(''.join(args)))
+        return self.__construct_constant_node(args, 'number_literal', int(''.join(args)))
 
     def string_literal(self, args) -> AST_Node:
-        return self.__construct_constant_node('string_literal', ''.join(args))
+        return self.__construct_constant_node(args, 'string_literal', ''.join(args))
 
     def constant_literal(self, args) -> AST_Node:
-        return self.__construct_constant_node('constant_literal', ''.join(args))
+        return self.__construct_constant_node(args, 'constant_literal', ''.join(args))
 
     def SEMI_COLON(self, name):
         """Throw away ';' """

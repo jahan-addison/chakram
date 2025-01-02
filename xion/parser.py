@@ -109,11 +109,12 @@ def parse_source_program_as_string(source_program: str, pretty: bool = True, deb
         return str(parse_source_program(source_program, debug))
 
 
-def get_source_program_as_ast(source_program: str, debug=True) -> AST_Node:
+def get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AST_Node:
     """ Get AST of B program (Lark.Tree)
 
     Args:
         source_program: The source B program as a string
+        meta: Enable semantic meta data flag
         debug: debug flag
 
     Returns:
@@ -121,15 +122,16 @@ def get_source_program_as_ast(source_program: str, debug=True) -> AST_Node:
 
     """
     tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast: AST_Node = AST_Transformer().transform(tree)
+    ast: AST_Node = AST_Transformer(use_meta=meta).transform(tree)
     return ast
 
 
-def get_source_program_ast_as_string(source_program: str, debug=True) -> str:
+def get_source_program_ast_as_string(source_program: str, meta=False, debug=True) -> str:
     """ Get AST of B program as string
 
     Args:
         source_program: The source B program as a string
+        meta: Enable semantic meta data flag
         debug: debug flag
 
     Returns:
@@ -137,21 +139,22 @@ def get_source_program_ast_as_string(source_program: str, debug=True) -> str:
 
     """
     tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast = AST_Transformer().transform(tree)
+    ast = AST_Transformer(use_meta=meta).transform(tree)
     return str(ast)
 
 
-def get_source_program_ast_as_json(source_program: str, debug=True):
+def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
     """ Get AST of B program as json
 
     Args:
         source_program: The source B program as a string
-        debug: debug flag
+        meta: Enable semantic meta data flag
+        debug: Debug flag
 
     Returns:
         AST as json dump
 
     """
     tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast = AST_Transformer().transform(tree)
+    ast = AST_Transformer(use_meta=meta).transform(tree)
     return json.dumps(ast)
