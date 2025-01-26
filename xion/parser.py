@@ -1,5 +1,5 @@
 from lark import Lark, Tree
-from xion.transformer import AST_Transformer, AST_Node
+from xion.transformer import AST_Transformer, AST_Node, Symbol_Table
 import os
 import json
 import logging
@@ -126,6 +126,23 @@ def get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AS
     return ast
 
 
+def get_source_program_symbol_table(source_program: str, debug=True) -> Symbol_Table:
+    """ Get Symbol Table of Source Program
+
+    Args:
+        source_program: The source B program as a string
+        debug: debug flag
+
+    Returns:
+        Symbol Table
+
+    """
+    tree = Parser(source_program, debug=debug).get_parse_tree()
+    ast = AST_Transformer(use_meta=True)
+    ast.transform(tree)
+    return ast.get_symbol_table()
+
+
 def get_source_program_ast_as_string(source_program: str, meta=False, debug=True) -> str:
     """ Get AST of B program as string
 
@@ -144,7 +161,7 @@ def get_source_program_ast_as_string(source_program: str, meta=False, debug=True
 
 
 def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
-    """ Get AST of B program as json
+    """ Get AST of B program as JSON
 
     Args:
         source_program: The source B program as a string
@@ -158,3 +175,17 @@ def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
     tree = Parser(source_program, debug=debug).get_parse_tree()
     ast = AST_Transformer(use_meta=meta).transform(tree)
     return json.dumps(ast)
+
+
+def get_source_program_symbol_table_as_json(source_program: str, debug=True):
+    """ Get Symbol Table of Source Program as JSON
+
+    Args:
+        source_program: The source B program as a string
+        debug: debug flag
+
+    Returns:
+        Symbol Table
+
+    """
+    return json.dumps(get_source_program_symbol_table(source_program, debug=debug))

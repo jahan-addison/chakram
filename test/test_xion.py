@@ -4,6 +4,7 @@ from os import getcwd
 from xion import __version__
 from xion.parser import Parser
 from xion.parser import parse_source_program, parse_source_program_as_string
+from xion.parser import get_source_program_symbol_table, get_source_program_symbol_table_as_json
 from xion.parser import get_source_program_as_ast, get_source_program_ast_as_string, get_source_program_ast_as_json
 from .fixture.program_1_parse_tree import program_example_1_parse_tree
 from .fixture.program_2_parse_tree import program_example_2_parse_tree
@@ -12,7 +13,7 @@ from .fixture.program_1_ast import program_example_1_ast, program_example_1_ast_
 from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
 def test_version() -> None:
-    assert __version__ == '1.1.1'
+    assert __version__ == '1.1.2'
 
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
@@ -55,3 +56,17 @@ def test_get_source_program_ast_as_json() -> None:
         test_contents = file.read()
         test = json.dumps(get_source_program_as_ast(test_contents))
         assert(test == get_source_program_ast_as_json(test_contents))
+
+def test_get_source_program_symbol_table() -> None:
+    with open(getcwd() + '/examples/simple.b') as file:
+        test_contents = file.read()
+        test = {'j': {'type': 'number_literal', 'line': 3, 'start_pos': 24, 'column': 4, 'end_pos': 25, 'end_column': 5}, 'main': {'type': 'function_definition', 'line': 1, 'start_pos': 0, 'column': 1, 'end_pos': 4, 'end_column': 5}, 'mess': {'type': 'vector_definition', 'line': 10, 'start_pos': 95, 'column': 1, 'end_pos': 99, 'end_column': 5}}
+        symbols = get_source_program_symbol_table(test_contents)
+        assert(symbols == test)
+
+def test_get_source_program_symbol_table_as_json() -> None:
+    with open(getcwd() + '/examples/simple.b') as file:
+        test_contents = file.read()
+        test = """{"j": {"type": "number_literal", "line": 3, "start_pos": 24, "column": 4, "end_pos": 25, "end_column": 5}, "main": {"type": "function_definition", "line": 1, "start_pos": 0, "column": 1, "end_pos": 4, "end_column": 5}, "mess": {"type": "vector_definition", "line": 10, "start_pos": 95, "column": 1, "end_pos": 99, "end_column": 5}}"""
+        symbols = get_source_program_symbol_table_as_json(test_contents)
+        assert(symbols == test)

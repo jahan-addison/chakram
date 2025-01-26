@@ -1,6 +1,6 @@
 from __future__ import annotations
 from lark import Transformer, Discard, Tree, Token
-from typing import TypedDict, Union, List, Optional, TypeVar, Literal, NotRequired
+from typing import TypedDict, Union, List, Optional, TypeVar, Literal, NotRequired, Dict
 
 T = TypeVar('T', bound='AST_Node')
 
@@ -13,6 +13,7 @@ Node_Type = Union[Literal['statement'], Literal['expression'], Operator_Type, st
 
 class _Meta(TypedDict):
     line: Union[int, None]
+    type: NotRequired[str]
     column: Union[int, None]
     start_pos: Union[int, None]
     end_pos: Union[int, None]
@@ -28,6 +29,8 @@ class AST_Node(TypedDict):
     _meta: NotRequired[_Meta]
 
 
+Symbol_Table = Dict[str, _Meta]
+
 Definitions = List[AST_Node]
 
 
@@ -35,8 +38,7 @@ class AST_Transformer(Transformer):
     """
         AST transformer and visitor class.
 
-        Transform a parse tree into an AST for future passes and semantic
-        optimizations.
+        Transform a parse tree into an AST for future passes and semantic analysis.
 
         A B program is structured by definitions - one of either a vector
         or function. Functions contain expressions (rvalues) or statements. These
@@ -45,10 +47,15 @@ class AST_Transformer(Transformer):
     """
     def __init__(self, use_meta=False):
         self._use_meta = use_meta
+        self._symbol_table = {}
         super().__init__()
 
     """ Optionally construct meta table during recursive descent. """
     _use_meta: bool
+
+    """ Constructed global symbol table of lvalues. """
+
+    _symbol_table: Symbol_Table
 
     """ Language operator map. """
     operator_map = {
@@ -76,6 +83,9 @@ class AST_Transformer(Transformer):
         'unary_not': '!',
         'unary_ones_complement': '~'
     }
+
+    def get_symbol_table(self) -> Symbol_Table:
+        return self._symbol_table
 
     def __construct_node(self,
                          token: Union[List[Tree], List[Token], AST_Node],
@@ -131,9 +141,27 @@ class AST_Transformer(Transformer):
         return args[0]
 
     def function_definition(self, args) -> AST_Node:
+        if isinstance(args[0], Token):
+            self._symbol_table[str(args[0].value)] = {
+                'type': 'function_definition',
+                'line': args[0].line,
+                'start_pos': args[0].start_pos,
+                'column': args[0].column,
+                'end_pos': args[0].end_pos,
+                'end_column': args[0].end_column
+            }
         return self.__construct_node(args, 'function_definition', args[0].value, left=args[1].children, right=args[2])
 
     def vector_definition(self, args) -> AST_Node:
+        if isinstance(args[0], Token):
+            self._symbol_table[str(args[0].value)] = {
+                'type': 'vector_definition',
+                'line': args[0].line,
+                'start_pos': args[0].start_pos,
+                'column': args[0].column,
+                'end_pos': args[0].end_pos,
+                'end_column': args[0].end_column
+            }
         return self.__construct_node(args, 'vector_definition', args[0].value, left=args[1], right=args[2:])
 
     """ Mutual-recursive Branches. """
@@ -236,6 +264,12 @@ class AST_Transformer(Transformer):
                                      left=args[1])
 
     def assignment_expression(self, args) -> AST_Node:
+        if args[0]['node'] == 'lvalue' and '_meta' in args[0]:
+            # add lvalue to symbol table
+            self._symbol_table[args[0]['root']] = {  # type: ignore
+                "type": args[2]['node'],
+                **args[0]['_meta']
+            }
         return self.__construct_node(args, 'assignment_expression', args[1], left=args[0], right=args[2])
 
     def assignment_operator(self, args) -> Operator_Type:

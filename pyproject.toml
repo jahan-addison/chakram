@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "xion"
-version = "1.1.1"
+version = "1.1.2"
 description = "Compiler frontend for the B Language"
 authors = ["Jahan Addison <jahan@jahanaddison.com>"]
 
