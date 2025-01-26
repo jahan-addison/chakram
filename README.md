@@ -7,7 +7,7 @@
 
 ### A Compiler Frontend (Lexer, Parser) for the B Language.
 
- Xion provides a LALR(1) grammar and parser generator (via [Lark](https://github.com/lark-parser/lark)). Check out [language details on the B language](https://www.bell-labs.com/usr/dmr/www/btut.pdf), [and syntax here](https://www.bell-labs.com/usr/dmr/www/kbman.html). You can find a link to my grammar [here](https://github.com/jahan-addison/xion/blob/master/xion/grammar.lark).
+Xion provides a LALR(1) grammar and parser generator (via [Lark](https://github.com/lark-parser/lark)). Check out [language details on the B language](https://www.bell-labs.com/usr/dmr/www/btut.pdf), [and syntax here](https://www.bell-labs.com/usr/dmr/www/kbman.html). You can find a link to my grammar [here](https://github.com/jahan-addison/xion/blob/master/xion/grammar.lark).
 
 This project was primarily created for [roxas](https://github.com/jahan-addison/roxas) as an easy-to-use first-pass frontend.
 
@@ -28,7 +28,7 @@ Symbol table construction passes are also available as factory methods:
 
 ### Details
 
-The AST type is structred as follows:
+The AST type is structured as follows:
 
 ```python
 
