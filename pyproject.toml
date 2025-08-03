@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "xion"
-version = "1.1.2"
+version = "1.1.3"
 description = "Compiler frontend for the B Language"
-authors = ["Jahan Addison <jahan@jahanaddison.com>"]
+authors = ["Jahan Addison"]
 
 [tool.poetry.dependencies]
 python = ">=3.11"
@@ -11,6 +11,7 @@ flake8 = "^7.1"
 lark = "^1.2.2"
 
 [tool.poetry.dev-dependencies]
+setuptools = "^80.9.0"
 pytest-cov = "^6"
 pytest = "^8"
 

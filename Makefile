@@ -14,4 +14,8 @@ run: lint
 	# run the first example
 	poetry run python $(shell pwd)/$(project)/__main__.py -f ./examples/1.b -p
 
+requirements: lint
+	poetry run pip freeze > requirements.txt
 
+install: lint
+	python -m pip install .
