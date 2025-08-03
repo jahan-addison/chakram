@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache-dependencies.cache-hit != 'true'
         run: |
-          python -m pip install -U pip poetry
+          python -m pip install -U pip poetry==1.8.3
           poetry --version
           poetry env use /usr/bin/python3
           poetry check --no-interaction
