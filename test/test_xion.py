@@ -13,7 +13,7 @@ from .fixture.program_1_ast import program_example_1_ast, program_example_1_ast_
 from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
 def test_version() -> None:
-    assert __version__ == '1.1.3'
+    assert __version__ == '1.1.4'
 
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
@@ -60,13 +60,14 @@ def test_get_source_program_ast_as_json() -> None:
 def test_get_source_program_symbol_table() -> None:
     with open(getcwd() + '/examples/simple.b') as file:
         test_contents = file.read()
-        test = {'j': {'type': 'number_literal', 'line': 3, 'start_pos': 24, 'column': 4, 'end_pos': 25, 'end_column': 5}, 'main': {'type': 'function_definition', 'line': 1, 'start_pos': 0, 'column': 1, 'end_pos': 4, 'end_column': 5}, 'mess': {'type': 'vector_definition', 'line': 10, 'start_pos': 95, 'column': 1, 'end_pos': 99, 'end_column': 5}}
+        #print(get_source_program_symbol_table(test_contents))
+        test = {'j': {'type': 'lvalue', 'line': 2, 'start_pos': 18, 'column': 9, 'end_pos': 19, 'end_column': 10}, 'putchar': {'type': 'lvalue', 'line': 5, 'start_pos': 60, 'column': 9, 'end_pos': 67, 'end_column': 16}, 'main': {'type': 'function_definition', 'line': 1, 'start_pos': 0, 'column': 1, 'end_pos': 4, 'end_column': 5}, 'mess': {'type': 'vector_definition', 'line': 10, 'start_pos': 95, 'column': 1, 'end_pos': 99, 'end_column': 5}}
         symbols = get_source_program_symbol_table(test_contents)
         assert(symbols == test)
 
 def test_get_source_program_symbol_table_as_json() -> None:
     with open(getcwd() + '/examples/simple.b') as file:
         test_contents = file.read()
-        test = """{"j": {"type": "number_literal", "line": 3, "start_pos": 24, "column": 4, "end_pos": 25, "end_column": 5}, "main": {"type": "function_definition", "line": 1, "start_pos": 0, "column": 1, "end_pos": 4, "end_column": 5}, "mess": {"type": "vector_definition", "line": 10, "start_pos": 95, "column": 1, "end_pos": 99, "end_column": 5}}"""
+        test = """{"j": {"type": "lvalue", "line": 2, "start_pos": 18, "column": 9, "end_pos": 19, "end_column": 10}, "putchar": {"type": "lvalue", "line": 5, "start_pos": 60, "column": 9, "end_pos": 67, "end_column": 16}, "main": {"type": "function_definition", "line": 1, "start_pos": 0, "column": 1, "end_pos": 4, "end_column": 5}, "mess": {"type": "vector_definition", "line": 10, "start_pos": 95, "column": 1, "end_pos": 99, "end_column": 5}}"""
         symbols = get_source_program_symbol_table_as_json(test_contents)
         assert(symbols == test)

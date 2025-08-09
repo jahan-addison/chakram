@@ -264,12 +264,6 @@ class AST_Transformer(Transformer):
                                      left=args[1])
 
     def assignment_expression(self, args) -> AST_Node:
-        if args[0]['node'] == 'lvalue' and '_meta' in args[0]:
-            # add lvalue to symbol table
-            self._symbol_table[args[0]['root']] = {  # type: ignore
-                "type": args[2]['node'],
-                **args[0]['_meta']
-            }
         return self.__construct_node(args, 'assignment_expression', args[1], left=args[0], right=args[2])
 
     def assignment_operator(self, args) -> Operator_Type:
@@ -281,14 +275,31 @@ class AST_Transformer(Transformer):
         return self.__construct_node(args, 'lvalue', args.value)
 
     def identifier(self, args) -> AST_Node:
-        return self.__construct_node(args, 'lvalue', args[0].value)
+        node = self.__construct_node(args, 'lvalue', args[0].value)
+        if not args[0].value in self._symbol_table:
+            self._symbol_table[args[0].value] = {
+                'type': 'lvalue',
+                'line': args[0].line,
+                'start_pos': args[0].start_pos,
+                'column': args[0].column,
+                'end_pos': args[0].end_pos,
+                'end_column': args[0].end_column
+            }
+        return node
 
     def indirect_identifier(self, args) -> AST_Node:
-        return self.__construct_node(args, 'indirect_lvalue', ['*'], left=args[1])
+        node = self.__construct_node(args, 'indirect_lvalue', ['*'], left=args[1])
+        if args[1]['root'] in self._symbol_table:
+            self._symbol_table[args[1]['root']]['type'] = 'indirect_lvalue'
+        return node
+
+        return node
 
     def vector_identifier(self, args) -> AST_Node:
-        return self.__construct_node(args, 'vector_lvalue', args[0]['root'], left=args[1])
-
+        node = self.__construct_node(args, 'vector_lvalue', args[0]['root'], left=args[1])
+        if args[0]['root'] in self._symbol_table:
+            self._symbol_table[args[0]['root']]['type'] = 'vector_lvalue'
+        return node
     """ Constants. """
 
     def __construct_constant_node(self,
