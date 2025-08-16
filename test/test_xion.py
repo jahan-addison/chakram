@@ -13,7 +13,7 @@ from .fixture.program_1_ast import program_example_1_ast, program_example_1_ast_
 from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
 def test_version() -> None:
-    assert __version__ == '1.1.4'
+    assert __version__ == '1.1.5'
 
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:

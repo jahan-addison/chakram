@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "xion"
-version = "1.1.4"
-description = "Compiler frontend for the B Language"
+version = "1.1.5"
+description = "Lexer, Parser (compiler frontend) for the B Language"
 authors = ["Jahan Addison"]
 
 [tool.poetry.dependencies]

@@ -57,7 +57,7 @@ loop: /* convert an integer */
 
 /* none of the above cases . . . if a digit, add to m */
 
-   if ( '0' <= c & c <= '9' ){
+   if ( '0' <= c && c <= '9' ){
       m = 10*m + c- '0';
       goto loop;
       }

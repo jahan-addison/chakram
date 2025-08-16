@@ -4,6 +4,8 @@
 //              LALR(k) Grammar
 /////////////////////////////////////////////////////////////
 
+// License: CC0 license
+
 // Grammar syntax - https://lark-parser.readthedocs.io/en/stable/grammar.html
 
 program : ( definition ) *
@@ -123,8 +125,10 @@ unary_dec             : "--"
 unary_ones_complement : "~"
 
 
-binary : "|" -> or_operator
-    | "&"     -> and_operator
+binary : "||" -> or_operator
+    | "&&"    -> and_operator
+    | "&"     -> bit_and_operator
+    | "|"     -> bit_or_operator
     | "=="    -> eq_operator
     | "!="    -> neq_oeprator
     | "<"     -> lt_operator

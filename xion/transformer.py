@@ -61,8 +61,10 @@ class AST_Transformer(Transformer):
     operator_map = {
         'unary_dec': '--',
         'unary_inc': '++',
-        'or_operator': '|',
-        'and_operator': '&',
+        'or_operator': '||',
+        'and_operator': '&&',
+        'bit_or_operator': '|',
+        'bit_and_operator': '&',
         'eq_operator': '==',
         'neq_oeprator': '!=',
         'lt_operator': '<',

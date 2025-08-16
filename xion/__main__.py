@@ -5,7 +5,7 @@ if __name__ == '__main__':
 
     args_parser = ArgumentParser()
     args_parser.add_argument("-f", "--file",
-                             dest="filename", help="write report to FILE", metavar="FILE")
+                             dest="filename", help="read from FILE", metavar="FILE")
     args_parser.add_argument("-p", "--pretty", required=False, action='store_true',
                              dest="pretty", default=False, help="pretty print parse tree")
     args_parser.add_argument('-s', '--symbols', required=False, dest="symbols", default=False, action='store_true')
