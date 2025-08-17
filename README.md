@@ -1,7 +1,4 @@
-# xion
-
-![img](docs/xion.png)
-
+<img src="docs/xion-logo.png" width="800px" alt="logo" > </img>
 
 ## Library
 
@@ -85,4 +82,4 @@ with open(path_to_b_source_program) as file:
 Apache 2 License.
 
 
-![img2](docs/axel-roxas-and-xion-looking-to-the-left-in-kingdom-hearts-3.png)
+![img](docs/xion.png)
