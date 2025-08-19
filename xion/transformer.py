@@ -247,6 +247,9 @@ class AST_Transformer(Transformer):
     def unary_expression(self, args) -> AST_Node:
         return self.__construct_node(args, 'unary_expression', [self.operator_map[args[0].data.value]], left=args[1])
 
+    def unary_operand(self, args) -> AST_Node:
+        return args[0]
+
     def evaluated_expression(self, args) -> AST_Node:
         return self.__construct_node(args, 'evaluated_expression', args[0])
 

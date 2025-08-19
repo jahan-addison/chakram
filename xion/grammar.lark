@@ -63,18 +63,18 @@ break_statement    :  "break" SEMI_COLON
 expression: SEMI_COLON
     | rvalue SEMI_COLON
 
-rvalue : evaluated_expression
-    | ternary_expression
-    | constant_expression
-    | assignment_expression
-    | pre_inc_dec_expression
-    | post_inc_dec_expression
-    | address_of_expression
-    | unary_expression
-    | unary_address_of
-    | relation_expression
-    | function_expression
-    | lvalue_expression
+rvalue : unary_address_of
+ | address_of_expression
+ | lvalue_expression
+ | constant_expression
+ | pre_inc_dec_expression
+ | post_inc_dec_expression
+ | unary_expression
+ | function_expression
+ | relation_expression
+ | ternary_expression
+ | assignment_expression
+ | evaluated_expression
 
 
 function_expression     : lvalue "(" parameters  ")"
@@ -85,7 +85,7 @@ relation_expression     : rvalue binary rvalue
 
 address_of_expression   : unary_address_of lvalue
 
-unary_expression        : unary rvalue
+unary_expression        : unary unary_operand
 
 post_inc_dec_expression : lvalue inc_dec
 
@@ -99,6 +99,12 @@ evaluated_expression    : "(" rvalue ")"
 
 lvalue_expression       : lvalue
 
+unary_operand : lvalue_expression
+    | constant_expression
+    | evaluated_expression
+    | function_expression
+    | pre_inc_dec_expression
+    | post_inc_dec_expression
 
 
 ?lvalue: NAME                   -> identifier
@@ -123,7 +129,6 @@ unary_not             : "!"
 unary_inc             : "++"
 unary_dec             : "--"
 unary_ones_complement : "~"
-
 
 binary : "||" -> or_operator
     | "&&"    -> and_operator
