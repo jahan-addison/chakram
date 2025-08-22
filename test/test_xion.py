@@ -2,7 +2,7 @@ import pytest
 from os import getcwd
 
 from xion import __version__
-from xion.parser import Parser, Syntax_Parse_Error
+from xion.parser import Parser, Syntax_Error
 from xion.parser import parse_source_program, parse_source_program_as_string
 from xion.parser import get_source_program_symbol_table, get_source_program_symbol_table_as_json
 from xion.parser import get_source_program_as_ast, get_source_program_ast_as_string, get_source_program_ast_as_json
@@ -37,7 +37,7 @@ def test_parse_source_program(program_example_1_parse_tree: str) -> None:
         assert(str(parse_source_program(file.read())) == program_example_1_parse_tree)
 
         with open(getcwd() + '/test/fixture/bad.b') as file:
-            with pytest.raises(Syntax_Parse_Error):
+            with pytest.raises(Syntax_Error):
                 parse_source_program(file.read())
 
 def test_parse_source_program_as_string(program_example_3_parse_tree: str) -> None:
@@ -46,7 +46,7 @@ def test_parse_source_program_as_string(program_example_3_parse_tree: str) -> No
         assert(parse_tree.replace('\t', ' ' * 4) == program_example_3_parse_tree)
 
         with open(getcwd() + '/test/fixture/bad.b') as file:
-            with pytest.raises(Syntax_Parse_Error):
+            with pytest.raises(Syntax_Error):
                 parse_source_program_as_string(file.read())
 
 
@@ -58,7 +58,7 @@ def test_get_source_program_as_ast(program_example_1_ast: str, program_example_1
 
         with open(getcwd() + '/test/fixture/bad.b') as file:
             contents = file.read()
-            with pytest.raises(Syntax_Parse_Error):
+            with pytest.raises(Syntax_Error):
                 get_source_program_as_ast(contents)
 
 def test_get_source_program_ast_as_string(program_example_1_ast: str) -> None:
@@ -67,7 +67,7 @@ def test_get_source_program_ast_as_string(program_example_1_ast: str) -> None:
 
         with open(getcwd() + '/test/fixture/bad.b') as file:
             test_contents = file.read()
-            with pytest.raises(Syntax_Parse_Error):
+            with pytest.raises(Syntax_Error):
                 get_source_program_ast_as_string(test_contents)
 
 def test_get_source_program_ast_as_json() -> None:
@@ -79,7 +79,7 @@ def test_get_source_program_ast_as_json() -> None:
 
         with open(getcwd() + '/test/fixture/bad.b') as file:
             test_contents = file.read()
-            with pytest.raises(Syntax_Parse_Error):
+            with pytest.raises(Syntax_Error):
                 get_source_program_ast_as_json(test_contents)
 
 def test_get_source_program_symbol_table() -> None:
@@ -91,7 +91,7 @@ def test_get_source_program_symbol_table() -> None:
 
         with open(getcwd() + '/test/fixture/bad.b') as file:
             test_contents = file.read()
-            with pytest.raises(Syntax_Parse_Error):
+            with pytest.raises(Syntax_Error):
                 get_source_program_symbol_table(test_contents)
 
 def test_get_source_program_symbol_table_as_json() -> None:
@@ -103,5 +103,5 @@ def test_get_source_program_symbol_table_as_json() -> None:
 
         with open(getcwd() + '/test/fixture/bad.b') as file:
             test_contents = file.read()
-            with pytest.raises(Syntax_Parse_Error):
+            with pytest.raises(Syntax_Error):
                 get_source_program_symbol_table_as_json(test_contents)

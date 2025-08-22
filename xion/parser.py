@@ -6,8 +6,8 @@ import logging
 import sys
 
 
-class Syntax_Parse_Error(Exception):
-    pass
+class Syntax_Error(Exception):
+    __module__ = "B Language Parser"
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -98,7 +98,7 @@ def parse_source_program(source_program: str, debug=True) -> Tree:
         """
         return Parser(source_program, debug=debug).get_parse_tree()
     except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
-        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
+        raise Syntax_Error(f"Syntax error: {e}") from None
 
 
 def parse_source_program_as_string(source_program: str, pretty: bool = True, debug=True) -> str:
@@ -119,7 +119,7 @@ def parse_source_program_as_string(source_program: str, pretty: bool = True, deb
         else:
             return str(parse_source_program(source_program, debug))
     except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
-        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
+        raise Syntax_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AST_Node:
@@ -140,7 +140,7 @@ def get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AS
         ast: AST_Node = AST_Transformer(use_meta=meta).transform(tree)
         return ast
     except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
-        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
+        raise Syntax_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_symbol_table(source_program: str, debug=True) -> Symbol_Table:
@@ -161,7 +161,7 @@ def get_source_program_symbol_table(source_program: str, debug=True) -> Symbol_T
         ast.transform(tree)
         return ast.get_symbol_table()
     except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
-        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
+        raise Syntax_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_ast_as_string(source_program: str, meta=False, debug=True) -> str:
@@ -182,7 +182,7 @@ def get_source_program_ast_as_string(source_program: str, meta=False, debug=True
         ast = AST_Transformer(use_meta=meta).transform(tree)
         return str(ast)
     except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
-        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
+        raise Syntax_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
@@ -203,7 +203,7 @@ def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
         ast = AST_Transformer(use_meta=meta).transform(tree)
         return json.dumps(ast)
     except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
-        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
+        raise Syntax_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_symbol_table_as_json(source_program: str, debug=True):
@@ -221,4 +221,4 @@ def get_source_program_symbol_table_as_json(source_program: str, debug=True):
         """
         return json.dumps(get_source_program_symbol_table(source_program, debug=debug))
     except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
-        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
+        raise Syntax_Error(f"Syntax error: {e}") from None
