@@ -1,10 +1,15 @@
-from lark import Lark, Tree
+from lark import Lark, Tree, exceptions
 from xion.transformer import AST_Transformer, AST_Node, Symbol_Table
 import os
 import json
 import logging
+import sys
 
-# Initialize logging for lark.
+
+class Syntax_Parse_Error(Exception):
+    pass
+
+
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -79,113 +84,141 @@ class Parser:
 
 
 def parse_source_program(source_program: str, debug=True) -> Tree:
-    """ Get parse tree of B program as serializable tree (Lark.Tree)
+    sys.tracebacklimit = 0
+    try:
+        """ Get parse tree of B program as serializable tree (Lark.Tree)
 
-    Args:
-        source_program: The source B program as a string
-        debug: debug flag
+        Args:
+            source_program: The source B program as a string
+            debug: debug flag
 
-    Returns:
-        Serializable parse tree
+        Returns:
+            Serializable parse tree
 
-    """
-    return Parser(source_program, debug=debug).get_parse_tree()
+        """
+        return Parser(source_program, debug=debug).get_parse_tree()
+    except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
+        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
 
 
 def parse_source_program_as_string(source_program: str, pretty: bool = True, debug=True) -> str:
-    """ Get parse tree of B program as serializable tree (Lark.Tree)
+    sys.tracebacklimit = 0
+    try:
+        """ Get parse tree of B program as serializable tree (Lark.Tree)
 
-    Args:
-        source_program: The source B program as a string
-        debug: debug flag
+        Args:
+            source_program: The source B program as a string
+            debug: debug flag
 
-    Returns:
-        Parse tree as string
+        Returns:
+            Parse tree as string
 
-    """
-    if pretty:
-        return parse_source_program(source_program, debug).pretty()
-    else:
-        return str(parse_source_program(source_program, debug))
+        """
+        if pretty:
+            return parse_source_program(source_program, debug).pretty()
+        else:
+            return str(parse_source_program(source_program, debug))
+    except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
+        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AST_Node:
-    """ Get AST of B program (Lark.Tree)
+    sys.tracebacklimit = 0
+    try:
+        """ Get AST of B program (Lark.Tree)
 
-    Args:
-        source_program: The source B program as a string
-        meta: Enable semantic meta data flag
-        debug: debug flag
+        Args:
+            source_program: The source B program as a string
+            meta: Enable semantic meta data flag
+            debug: debug flag
 
-    Returns:
-        Tree[AST]
+        Returns:
+            Tree[AST]
 
-    """
-    tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast: AST_Node = AST_Transformer(use_meta=meta).transform(tree)
-    return ast
+        """
+        tree = Parser(source_program, debug=debug).get_parse_tree()
+        ast: AST_Node = AST_Transformer(use_meta=meta).transform(tree)
+        return ast
+    except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
+        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_symbol_table(source_program: str, debug=True) -> Symbol_Table:
-    """ Get Symbol Table of Source Program
+    sys.tracebacklimit = 0
+    try:
+        """ Get Symbol Table of Source Program
 
-    Args:
-        source_program: The source B program as a string
-        debug: debug flag
+        Args:
+            source_program: The source B program as a string
+            debug: debug flag
 
-    Returns:
-        Symbol Table
+        Returns:
+            Symbol Table
 
-    """
-    tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast = AST_Transformer(use_meta=True)
-    ast.transform(tree)
-    return ast.get_symbol_table()
+        """
+        tree = Parser(source_program, debug=debug).get_parse_tree()
+        ast = AST_Transformer(use_meta=True)
+        ast.transform(tree)
+        return ast.get_symbol_table()
+    except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
+        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_ast_as_string(source_program: str, meta=False, debug=True) -> str:
-    """ Get AST of B program as string
+    sys.tracebacklimit = 0
+    try:
+        """ Get AST of B program as string
 
-    Args:
-        source_program: The source B program as a string
-        meta: Enable semantic meta data flag
-        debug: debug flag
+        Args:
+            source_program: The source B program as a string
+            meta: Enable semantic meta data flag
+            debug: debug flag
 
-    Returns:
-        AST as string
+        Returns:
+            AST as string
 
-    """
-    tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast = AST_Transformer(use_meta=meta).transform(tree)
-    return str(ast)
+        """
+        tree = Parser(source_program, debug=debug).get_parse_tree()
+        ast = AST_Transformer(use_meta=meta).transform(tree)
+        return str(ast)
+    except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
+        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
-    """ Get AST of B program as JSON
+    sys.tracebacklimit = 0
+    try:
+        """ Get AST of B program as JSON
 
-    Args:
-        source_program: The source B program as a string
-        meta: Enable semantic meta data flag
-        debug: Debug flag
+        Args:
+            source_program: The source B program as a string
+            meta: Enable semantic meta data flag
+            debug: Debug flag
 
-    Returns:
-        AST as json dump
+        Returns:
+            AST as json dump
 
-    """
-    tree = Parser(source_program, debug=debug).get_parse_tree()
-    ast = AST_Transformer(use_meta=meta).transform(tree)
-    return json.dumps(ast)
+        """
+        tree = Parser(source_program, debug=debug).get_parse_tree()
+        ast = AST_Transformer(use_meta=meta).transform(tree)
+        return json.dumps(ast)
+    except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
+        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
 
 
 def get_source_program_symbol_table_as_json(source_program: str, debug=True):
-    """ Get Symbol Table of Source Program as JSON
+    sys.tracebacklimit = 0
+    try:
+        """ Get Symbol Table of Source Program as JSON
 
-    Args:
-        source_program: The source B program as a string
-        debug: debug flag
+        Args:
+            source_program: The source B program as a string
+            debug: debug flag
 
-    Returns:
-        Symbol Table
+        Returns:
+            Symbol Table
 
-    """
-    return json.dumps(get_source_program_symbol_table(source_program, debug=debug))
+        """
+        return json.dumps(get_source_program_symbol_table(source_program, debug=debug))
+    except (exceptions.UnexpectedToken, exceptions.ParseError) as e:
+        raise Syntax_Parse_Error(f"Syntax error: {e}") from None
