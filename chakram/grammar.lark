@@ -55,7 +55,7 @@ block_statement    :  ( "{" (statement) *  "}" )
 
 while_statement    :  "while" "(" ( rvalue ) ")" statement
 
-switch_statement   :  "switch" ("(" rvalue ")" | rvalue) "{" case_statement * "}"
+switch_statement   :  "switch" ("(" rvalue ")") "{" case_statement * "}"
 
 break_statement    :  "break" SEMI_COLON
 
@@ -152,7 +152,7 @@ binary : "||" -> or_operator
 
 
 constant  : INT                  -> number_literal
-    | "'" ( CHAR ) ~ 1 .. 4 "'"  -> constant_literal
+    | "'" ( CHAR ) ~ 1 .. 2 "'"  -> constant_literal
     | /\'\s\'/                   -> constant_literal
     | ESCAPED_STRING             -> string_literal
 

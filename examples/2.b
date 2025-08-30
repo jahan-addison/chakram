@@ -27,7 +27,7 @@ loop :
 		putchar(c);
 	}
 	x = *adx++;
-	switch c = char(fmt,i++) {
+	switch (c = char(fmt,i++)) {
 
 	case 'd': /* decimal */
 	case 'o': /* octal */

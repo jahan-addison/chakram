@@ -64,6 +64,17 @@ with open(path_to_b_source_program) as file:
     print(parser.get_source_program_ast_as_json(file.read()))
 ```
 
+### Language
+
+There are a few implementation differences between the parser and B specification, namely:
+
+* Support for C++-style comments (i.e. "//")
+* Switch statement condition must always be enclosed with "(" and ")"
+* Uses C operator precedence
+* Constant literals must be exactly 1 byte
+* Logical and/or operators behave more like C (i.e. `||` and `&&`)
+* Bitwise and/or operators behave more like C (i.e. `|` and `&`)
+
 ### Dependencies
 
 `chakram` uses `poetry` for dependency management. Simply run `poetry install` to install dependencies.
