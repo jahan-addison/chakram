@@ -207,10 +207,19 @@ class AST_Transformer(Transformer):
         return self.__construct_statement_node(args, 'if', left=args[0], right=args[1])
 
     def goto_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node(args, 'goto', left=self.__to_identifier(args[0]))
+        return self.__construct_statement_node(args, 'goto', left=[args[0]])
 
     def label_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node(args, 'label', left=self.__to_identifier(args[0]))
+        if isinstance(args[0], Token):
+            self._symbol_table[str(args[0].value)] = {
+                'type': 'label',
+                'line': args[0].line,
+                'start_pos': args[0].start_pos,
+                'column': args[0].column,
+                'end_pos': args[0].end_pos,
+                'end_column': args[0].end_column
+            }
+        return self.__construct_statement_node(args, 'label', left=[args[0][:-1]])
 
     def extrn_statement(self, args) -> AST_Node:
         return self.__construct_statement_node(args, 'extrn', left=list(map(lambda lvalue: self.__to_identifier(lvalue), args)))
