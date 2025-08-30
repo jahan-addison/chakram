@@ -68,8 +68,8 @@ with open(path_to_b_source_program) as file:
 
 There are a few implementation differences between the parser and B specification, namely:
 
-* Support for C++-style comments (i.e. "//")
-* Switch statement condition must always be enclosed with "(" and ")"
+* Support for C++ style comments (i.e. `//`)
+* Switch statement condition must always be enclosed with `(` and `)`
 * Uses C operator precedence
 * Constant literals must be exactly 1 byte
 * Logical and/or operators behave more like C (i.e. `||` and `&&`)
