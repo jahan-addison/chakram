@@ -1,5 +1,5 @@
 from lark import Lark, Tree, exceptions
-from xion.transformer import AST_Transformer, AST_Node, Symbol_Table
+from chakram.transformer import AST_Transformer, AST_Node, Symbol_Table
 import os
 import json
 import logging

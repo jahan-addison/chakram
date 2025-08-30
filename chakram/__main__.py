@@ -1,6 +1,6 @@
 
 if __name__ == '__main__':
-    from xion import parser
+    from chakram import parser
     from argparse import ArgumentParser
 
     args_parser = ArgumentParser()

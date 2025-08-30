@@ -169,7 +169,9 @@ CHAR       : /[\x00-\x7F]/
 %import common.WS
 %import common.INT
 %import common.WORD
+%import common.CPP_COMMENT
 %import common.C_COMMENT
 
 %ignore WS
 %ignore C_COMMENT
+%ignore CPP_COMMENT

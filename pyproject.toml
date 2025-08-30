@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "xion"
-version = "1.1.9"
-description = "Lexer, Parser (compiler frontend) for the B Language"
+name = "chakram"
+version = "1.2.0"
+description = "Lexer, Parser for the B Language"
 authors = ["Jahan Addison"]
 
 [tool.poetry.dependencies]
@@ -17,7 +17,7 @@ pytest = "^8"
 
 [tool.coverage.run]
 omit = [
-    "xion/__main__.py",
+    "chakram/__main__.py",
 ]
 
 [build-system]

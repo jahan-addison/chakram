@@ -1,11 +1,11 @@
 import pytest
 from os import getcwd
 
-from xion import __version__
-from xion.parser import Parser, Syntax_Error
-from xion.parser import parse_source_program, parse_source_program_as_string
-from xion.parser import get_source_program_symbol_table, get_source_program_symbol_table_as_json
-from xion.parser import get_source_program_as_ast, get_source_program_ast_as_string, get_source_program_ast_as_json
+from chakram import __version__
+from chakram.parser import Parser, Syntax_Error
+from chakram.parser import parse_source_program, parse_source_program_as_string
+from chakram.parser import get_source_program_symbol_table, get_source_program_symbol_table_as_json
+from chakram.parser import get_source_program_as_ast, get_source_program_ast_as_string, get_source_program_ast_as_json
 from .fixture.program_1_parse_tree import program_example_1_parse_tree
 from .fixture.program_2_parse_tree import program_example_2_parse_tree
 from .fixture.program_3_parse_tree import program_example_3_parse_tree
@@ -13,7 +13,7 @@ from .fixture.program_1_ast import program_example_1_ast, program_example_1_ast_
 from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
 def test_version() -> None:
-    assert __version__ == '1.1.9'
+    assert __version__ == '1.2.0'
 
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:

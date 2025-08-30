@@ -1,14 +1,13 @@
-<img src="docs/xion-logo.png" width="800px" alt="logo" > </img>
+<img src="docs/chakram-logo.png" width="800px" alt="logo" > </img>
 
-## Library
 
-### A Compiler Frontend (Lexer, Parser) for the B Language.
+### Compiler Frontend (Lexer, Parser) for the B Language
 
-Xion provides a LALR(1) grammar and parser generator (via [Lark](https://github.com/lark-parser/lark)). Check out [language details on the B language](https://www.bell-labs.com/usr/dmr/www/btut.pdf), [and syntax here](https://www.bell-labs.com/usr/dmr/www/kbman.html). You can find a link to my grammar [here](https://github.com/jahan-addison/xion/blob/master/xion/grammar.lark).
+Chakram provides a LALR(1) grammar and parser generator (via [Lark](https://github.com/lark-parser/lark)). Check out [language details on the B language](https://www.bell-labs.com/usr/dmr/www/btut.pdf), [and syntax here](https://www.bell-labs.com/usr/dmr/www/kbman.html). You can find a link to my grammar [here](https://github.com/jahan-addison/chakram/blob/master/chakram/grammar.lark).
 
-This project was primarily created for [roxas](https://github.com/jahan-addison/roxas) as an easy-to-use first-pass frontend.
+This project was primarily created for [credence](https://github.com/jahan-addison/credence) as an easy-to-use first-pass frontend.
 
-Xion additionally provides factory methods for the parse tree as an AST with json, strings, and `Lark.tree`:
+Chakram additionally provides factory methods for the parse tree as an AST with json, strings, and `Lark.tree`:
 
 * `parse_source_program(source_program: str, debug=True) -> Lark.Tree`
 * `parse_source_program_as_string(source_program: str, pretty: bool = True, debug=True) -> str`
@@ -23,7 +22,7 @@ Symbol table construction passes are also available as factory methods:
 * `get_source_program_symbol_table_as_json(source_program: str, debug=True) -> JSON`
 
 
-### Details
+## Details
 
 The AST type is structured as follows:
 
@@ -57,29 +56,26 @@ and a Symbol Table which contains idenfitier, function definition, and vector de
 Symbol_Table = Dict[str, _Meta]
 ```
 
-#### Usage Example
+### Usage Example
 
 ```python
-from xion import parser
+from chakram import parser
 with open(path_to_b_source_program) as file:
     print(parser.get_source_program_ast_as_json(file.read()))
 ```
 
-## Dependencies
+### Dependencies
 
-`xion` uses `poetry` for dependency management. Simply run `poetry install` to install dependencies.
+`chakram` uses `poetry` for dependency management. Simply run `poetry install` to install dependencies.
 
-## Tests
+### Tests
 
-**Xion has 90% code coverage.** Note that tests of ast nodes are proofs of correction to the grammar.
+**Chakram has 90% code coverage.** Note that tests of ast nodes are proofs of correction to the grammar.
 
 * Use `make run` to run the parser on the first B program example
 * Use `make test` to run the test suite and verify grammar correctness
 
 
-## License
+# License
 
 Apache 2 License.
-
-
-![img](docs/xion.png)

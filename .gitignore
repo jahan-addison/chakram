@@ -4,5 +4,6 @@
 __pycache__
 .coverage
 .DS_Store
+.vscode
 
 requirements.txt
