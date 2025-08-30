@@ -211,7 +211,7 @@ class AST_Transformer(Transformer):
 
     def label_statement(self, args) -> AST_Node:
         if isinstance(args[0], Token):
-            self._symbol_table[str(args[0].value)] = {
+            self._symbol_table[args[0].value[:-1]] = {
                 'type': 'label',
                 'line': args[0].line,
                 'start_pos': args[0].start_pos,
