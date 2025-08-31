@@ -201,7 +201,7 @@ class AST_Transformer(Transformer):
         return self.__construct_statement_node(args, 'return', left=args)
 
     def while_statement(self, args) -> AST_Node:
-        return self.__construct_statement_node(args, 'while', left=args[0], right=args[1])
+        return self.__construct_statement_node(args, 'while', left=args[0], right=args[1:])
 
     def if_statement(self, args) -> AST_Node:
         return self.__construct_statement_node(args, 'if', left=args[0], right=args[1:])
