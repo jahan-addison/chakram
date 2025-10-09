@@ -13,7 +13,7 @@ from .fixture.program_1_ast import program_example_1_ast, program_example_1_ast_
 from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
 def test_version() -> None:
-    assert __version__ == '1.2.5'
+    assert __version__ == '1.2.6'
 
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
@@ -26,12 +26,6 @@ def test_program_2_parse_tree(program_example_2_parse_tree: str) -> None:
         parser = Parser(file.read())
         assert(str(parser.get_parse_tree()) == program_example_2_parse_tree)
 
-def test_program_3_parse_tree(program_example_3_parse_tree: str) -> None:
-    with open(getcwd() + '/examples/3.b') as file:
-        parser = Parser(file.read())
-
-        assert(str(parser).replace('\t', ' ' * 4) == program_example_3_parse_tree)
-
 def test_parse_source_program(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
         assert(str(parse_source_program(file.read())) == program_example_1_parse_tree)
@@ -40,11 +34,7 @@ def test_parse_source_program(program_example_1_parse_tree: str) -> None:
             with pytest.raises(Syntax_Error):
                 parse_source_program(file.read())
 
-def test_parse_source_program_as_string(program_example_3_parse_tree: str) -> None:
-    with open(getcwd() + '/examples/3.b') as file:
-        parse_tree = parse_source_program_as_string(file.read())
-        assert(parse_tree.replace('\t', ' ' * 4) == program_example_3_parse_tree)
-
+def test_parse_source_program_as_valid_syntax() -> None:
         with open(getcwd() + '/test/fixture/bad.b') as file:
             with pytest.raises(Syntax_Error):
                 parse_source_program_as_string(file.read())

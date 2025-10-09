@@ -85,7 +85,7 @@ relation_expression     : rvalue binary rvalue
 
 address_of_expression   : unary_address_of lvalue
 
-unary_expression        : unary unary_operand
+unary_expression        : unary_modifier unary_operand
 
 post_inc_dec_expression : lvalue inc_dec
 
@@ -112,19 +112,21 @@ unary_operand : lvalue_expression
     | lvalue "[" rvalue "]"     -> vector_identifier
 
 
-assignment_operator : EQUAL [ binary ]
+assignment_operator : EQUAL
 
 ?inc_dec : unary_inc
     | unary_dec
 
 
-?unary : unary_minus
+?unary_modifier : unary_minus
+    | unary_plus
     | unary_not
     | unary_ones_complement
 
 unary_indirection     : "*"
 unary_address_of      : "&"
 unary_minus           : "-"
+unary_plus            : "+"
 unary_not             : "!"
 unary_inc             : "++"
 unary_dec             : "--"

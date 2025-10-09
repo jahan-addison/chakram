@@ -281,7 +281,7 @@ class AST_Transformer(Transformer):
         return self.__construct_node(args, 'assignment_expression', args[1], left=args[0], right=args[2])
 
     def assignment_operator(self, args) -> Operator_Type:
-        return ['=', args[1] if args[1] is None else self.operator_map[args[1].data]]
+        return ['=']
 
     """ Inline Lvalue grammar productions. """
 
