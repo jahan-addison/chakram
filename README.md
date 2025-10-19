@@ -34,6 +34,7 @@ Node = Union[List[T], T]
 class _Meta(TypedDict):
     line: Union[int, None]
     type: NotRequired[str]
+    size: NotRequired[int]
     column: Union[int, None]
     start_pos: Union[int, None]
     end_pos: Union[int, None]
@@ -66,14 +67,18 @@ with open(path_to_b_source_program) as file:
 
 ### Language
 
-There are a few implementation differences between the parser and B specification, namely:
+There are a few differences between the compiler and B specification, namely:
 
 * Support for C++ style comments (i.e. `//`)
-* Switch statement condition must always be enclosed with `(` and `)`
+* Goto and labels are not fully supported, use functions and control structures
+* Logical operators behave more like C (i.e. `||` and `&&`)
+* Bitwise operators behave more like C (i.e. `|` and `&`)
 * Uses C operator precedence
+* Boolean "truthy" coercion for all data types in conditionals
+* Switch statement condition must always be enclosed with `(` and `)`
+* Binary operators may not be used directly after the `=` operator
 * Constant literals must be exactly 1 byte
-* Logical and/or operators behave more like C (i.e. `||` and `&&`)
-* Bitwise and/or operators behave more like C (i.e. `|` and `&`)
+
 
 ### Dependencies
 

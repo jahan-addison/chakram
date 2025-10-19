@@ -9,11 +9,12 @@ from chakram.parser import get_source_program_as_ast, get_source_program_ast_as_
 from .fixture.program_1_parse_tree import program_example_1_parse_tree
 from .fixture.program_2_parse_tree import program_example_2_parse_tree
 from .fixture.program_3_parse_tree import program_example_3_parse_tree
-from .fixture.program_1_ast import program_example_1_ast, program_example_1_ast_meta, program_example_1_ast_symbols
+from .fixture.program_1_ast import program_example_1_ast, program_simple_ast_symbols, program_example_1_ast_meta
+from .fixture.program_1_ast import program_simple_ast_symbols_as_json, program_example_1_ast_symbols_as_json, program_example_1_ast_symbols, program_simple_ast_symbols
 from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
 def test_version() -> None:
-    assert __version__ == '1.2.6'
+    assert __version__ == '1.2.7'
 
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
@@ -72,25 +73,18 @@ def test_get_source_program_ast_as_json() -> None:
             with pytest.raises(Syntax_Error):
                 get_source_program_ast_as_json(test_contents)
 
-def test_get_source_program_symbol_table() -> None:
+def test_get_source_program_symbol_table(program_simple_ast_symbols_as_json: str) -> None:
     with open(getcwd() + '/examples/simple.b') as file:
+        import json
         test_contents = file.read()
-        test = {'j': {'type': 'lvalue', 'line': 2, 'start_pos': 18, 'column': 9, 'end_pos': 19, 'end_column': 10}, 'putchar': {'type': 'lvalue', 'line': 5, 'start_pos': 60, 'column': 9, 'end_pos': 67, 'end_column': 16}, 'main': {'type': 'function_definition', 'line': 1, 'start_pos': 0, 'column': 1, 'end_pos': 4, 'end_column': 5}, 'mess': {'type': 'vector_definition', 'line': 10, 'start_pos': 95, 'column': 1, 'end_pos': 99, 'end_column': 5}}
-        symbols = get_source_program_symbol_table(test_contents)
-        assert(symbols == test)
-
+        test = json.dumps(get_source_program_symbol_table(test_contents))
+        assert(program_simple_ast_symbols_as_json == test)
         with open(getcwd() + '/test/fixture/bad.b') as file:
             test_contents = file.read()
             with pytest.raises(Syntax_Error):
                 get_source_program_symbol_table(test_contents)
 
-def test_get_source_program_symbol_table_as_json(program_example_1_ast_symbols: str) -> None:
-    with open(getcwd() + '/examples/simple.b') as file:
-        test_contents = file.read()
-        test = """{"j": {"type": "lvalue", "line": 2, "start_pos": 18, "column": 9, "end_pos": 19, "end_column": 10}, "putchar": {"type": "lvalue", "line": 5, "start_pos": 60, "column": 9, "end_pos": 67, "end_column": 16}, "main": {"type": "function_definition", "line": 1, "start_pos": 0, "column": 1, "end_pos": 4, "end_column": 5}, "mess": {"type": "vector_definition", "line": 10, "start_pos": 95, "column": 1, "end_pos": 99, "end_column": 5}}"""
-        symbols = get_source_program_symbol_table_as_json(test_contents)
-        assert(symbols == test)
-
+def test_get_source_program_symbol_table_as_json(program_example_1_ast_symbols_as_json: str) -> None:
         with open(getcwd() + '/test/fixture/bad.b') as file:
             test_contents = file.read()
             with pytest.raises(Syntax_Error):
@@ -98,4 +92,4 @@ def test_get_source_program_symbol_table_as_json(program_example_1_ast_symbols: 
 
         with open(getcwd() + '/examples/1.b') as file:
             test_contents = file.read()
-            assert(program_example_1_ast_symbols == get_source_program_symbol_table_as_json(test_contents))
+            assert(program_example_1_ast_symbols_as_json == get_source_program_symbol_table_as_json(test_contents))

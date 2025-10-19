@@ -19,7 +19,11 @@ if __name__ == '__main__':
 
     with open(args.filename) as file:
         if (args.symbols):
-            print(parser.get_source_program_symbol_table_as_json(file.read()))
+            if (args.json):
+                print(parser.get_source_program_symbol_table_as_json(file.read()))
+            else:
+                print(parser.get_source_program_symbol_table(file.read()))
+
             exit(0)
         if args.pt:
             print(parser.parse_source_program_as_string(file.read(), pretty=args.pretty))

@@ -14,6 +14,7 @@ Node_Type = Union[Literal['statement'], Literal['expression'], Operator_Type, st
 class _Meta(TypedDict):
     line: Union[int, None]
     type: NotRequired[str]
+    size: NotRequired[int]
     column: Union[int, None]
     start_pos: Union[int, None]
     end_pos: Union[int, None]
@@ -159,6 +160,7 @@ class AST_Transformer(Transformer):
             self._symbol_table[str(args[0].value)] = {
                 'type': 'vector_definition',
                 'line': args[0].line,
+                'size': int(args[1]['root']),
                 'start_pos': args[0].start_pos,
                 'column': args[0].column,
                 'end_pos': args[0].end_pos,

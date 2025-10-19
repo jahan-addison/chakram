@@ -7,17 +7,20 @@
   will copy file1 to file2. */
 
 main () {
-   auto j,s[20],t[20];
-   reread(); /* get command line */
-   getstr(s); /* put into s */
-   j = getarg(t,s,0); /* skip H* name */
-   j = getarg(t,s,j); /* filel */
-   openr( 5,t );
-   getarg(t,s,j); /* file2 */
-   openw( 6,t );
-   while( putchar( getchar() ) != '*e' ) ; /* copy contents */
+   //auto j,s[20],t[20];
+   //reread(); /* get command line */
+   //getstr(s); /* put into s */
+   //j = getarg(t,s,0); /* skip H* name */
+   //j = getarg(t,s,j); /* filel */
+   //openr( 5,t );
+   //getarg(t,s,j); /* file2 */
+   //openw( 6,t );
+   //while( putchar( getchar() ) != '*e' ) ; /* copy contents */
    }
 
+char(a,b) {
+   return (a);
+}
 
 /* This function is called with a string s of the form nnn, nnn,
    nnn, . . .  , where the nnn are integers.  The values are placed
@@ -28,8 +31,8 @@ main () {
 
 convert(s,v) {
 
-   auto m,i,j,c,sign;
-   i = O;
+   auto m,i,j,c,sign,C;
+   i = 0;
    j =-1;
 
 init: /* initialize to convert an integer */
