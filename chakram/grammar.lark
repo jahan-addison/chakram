@@ -13,15 +13,16 @@ program : ( definition ) *
 definition : function_definition
  | vector_definition
 
-vector_definition   :  NAME ( "[" ( constant ) ? "]" ) ? (ival ( ","? ival ) * )? SEMI_COLON
+vector_definition   :  NAME v_size (v_symbol ( ","? v_symbol ) * )? SEMI_COLON
 
 function_definition :  ( NAME "(" parameters ")" block_statement )
 
 parameters          :  [ rvalue (( "," rvalue ) *) ]
 
-ival : constant
+v_symbol : constant
     | NAME
 
+v_size : [ ( "[" ( constant ) ? "]" ) ]
 
 statement : block_statement
     | label_statement

@@ -139,7 +139,11 @@ class AST_Transformer(Transformer):
         """ Passthrough"""
         return args[0]
 
-    def ival(self, args) -> AST_Node:
+    def v_size(self, args) -> AST_Node:
+        """ Passthrough"""
+        return args[0]
+
+    def v_symbol(self, args) -> AST_Node:
         """ Passthrough"""
         return args[0]
 
@@ -160,12 +164,14 @@ class AST_Transformer(Transformer):
             self._symbol_table[str(args[0].value)] = {
                 'type': 'vector_definition',
                 'line': args[0].line,
-                'size': int(args[1]['root']),
                 'start_pos': args[0].start_pos,
                 'column': args[0].column,
                 'end_pos': args[0].end_pos,
                 'end_column': args[0].end_column
             }
+            if (args[1] is not None):
+                self._symbol_table[str(args[0].value)]['size'] = int(args[1]["root"])
+
         return self.__construct_node(args, 'vector_definition', args[0].value, left=args[1], right=args[2:])
 
     """ Mutual-recursive Branches. """
