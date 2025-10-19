@@ -315,12 +315,13 @@ class AST_Transformer(Transformer):
             self._symbol_table[args[1]['root']]['type'] = 'indirect_lvalue'
         return node
 
-        return node
-
     def vector_identifier(self, args) -> AST_Node:
         node = self.__construct_node(args, 'vector_lvalue', args[0]['root'], left=args[1])
-        if args[0]['root'] in self._symbol_table:
-            self._symbol_table[args[0]['root']]['type'] = 'vector_lvalue'
+        name = args[0]['root']
+        if name in self._symbol_table:
+            self._symbol_table[name]['type'] = 'vector_lvalue'
+            if (isinstance(args[1]["root"], int) and 'size' not in self._symbol_table[name]):
+                self._symbol_table[name]['size'] = args[1]["root"]
         return node
     """ Constants. """
 
