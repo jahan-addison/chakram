@@ -83,6 +83,7 @@ class AST_Transformer(Transformer):
         'unary_indirection': '*',
         'unary_address_of': '&',
         'unary_minus': '-',
+        'unary_plus': '+',
         'unary_not': '!',
         'unary_ones_complement': '~'
     }
