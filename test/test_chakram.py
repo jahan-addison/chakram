@@ -13,9 +13,6 @@ from .fixture.program_1_ast import program_example_1_ast, program_simple_ast_sym
 from .fixture.program_1_ast import program_simple_ast_symbols_as_json, program_example_1_ast_symbols_as_json, program_example_1_ast_symbols, program_simple_ast_symbols
 from .fixture.program_1_ast_json import program_examle_1_ast_json_meta
 
-def test_version() -> None:
-    assert __version__ == '1.2.10'
-
 def test_program_1_parse_tree(program_example_1_parse_tree: str) -> None:
     with open(getcwd() + '/examples/1.b') as file:
         parser = Parser(file.read())

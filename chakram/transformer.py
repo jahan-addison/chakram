@@ -312,7 +312,7 @@ class AST_Transformer(Transformer):
 
     def indirect_identifier(self, args) -> AST_Node:
         node = self.__construct_node(args, 'indirect_lvalue', ['*'], left=args[1])
-        if args[1]['root'] in self._symbol_table:
+        if isinstance(args[1]['root'], str) and args[1]['root'] in self._symbol_table:
             self._symbol_table[args[1]['root']]['type'] = 'indirect_lvalue'
         return node
 
