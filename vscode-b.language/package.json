@@ -1,0 +1,39 @@
+{
+  "name": "vscode-b-language",
+  "version": "1.1.0",
+  "description": "VSCode support for the B Language",
+  "author": "Jahan Addison",
+  "license": "Apache License 2",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "b-language",
+        "aliases": [
+          "B Language",
+          "b"
+        ],
+        "extensions": [
+          ".b",
+          ".blang"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "b-language",
+        "scopeName": "source.b",
+        "path": "./syntaxes/b-language.tmLanguage.json"
+      }
+    ]
+  },
+  "dependencies": {
+    "vsce": "^2.15.0"
+  }
+}
