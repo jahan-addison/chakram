@@ -1,19 +1,22 @@
 [tool.poetry]
 name = "chakram"
-version = "1.2.11"
+version = "1.2.12"
 description = "Lexer, Parser for the B Language"
 authors = ["Jahan Addison"]
+
+[tool.flake8]
+max-line-length = 100
 
 [tool.poetry.dependencies]
 python = ">=3.11"
 mypy = "^1.13.0"
 flake8 = "^7.1"
 lark = "^1.2.2"
-
-[tool.poetry.dev-dependencies]
 setuptools = "^80.9.0"
 pytest-cov = "^6"
 pytest = "^8"
+flake8-pyproject = "^1.2.4"
+black = "^25.12.0"
 
 [tool.coverage.run]
 omit = [

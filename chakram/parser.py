@@ -33,18 +33,20 @@ class Parser:
         tree: Parse tree.
 
     """
-    def __init__(self, source_program: str, debug=True, grammar=f'{os.path.dirname(__file__)}/grammar.lark') -> None:
+
+    def __init__(
+        self,
+        source_program: str,
+        debug=True,
+        grammar=f"{os.path.dirname(__file__)}/grammar.lark",
+    ) -> None:
         self.source: str = source_program
         self._read_grammar(grammar)
-        self.parser = Lark(
-            self.grammar,
-            start='program',
-            parser='lalr',
-            debug=True)
+        self.parser = Lark(self.grammar, start="program", parser="lalr", debug=True)
         self._tree = self.parser.parse(self.source)
 
     def __str__(self) -> str:
-        """The parse tree as formatted string """
+        """The parse tree as formatted string"""
         return self._tree.pretty()
 
     def get_parse_tree(self) -> Tree:
@@ -86,7 +88,7 @@ class Parser:
 def parse_source_program(source_program: str, debug=True) -> Tree:
     sys.tracebacklimit = 0
     try:
-        """ Get parse tree of B program as serializable tree (Lark.Tree)
+        """Get parse tree of B program as serializable tree (Lark.Tree)
 
         Args:
             source_program: The source B program as a string
@@ -101,10 +103,12 @@ def parse_source_program(source_program: str, debug=True) -> Tree:
         raise Syntax_Error(f"{e}") from None
 
 
-def parse_source_program_as_string(source_program: str, pretty: bool = True, debug=True) -> str:
+def parse_source_program_as_string(
+    source_program: str, pretty: bool = True, debug=True
+) -> str:
     sys.tracebacklimit = 0
     try:
-        """ Get parse tree of B program as serializable tree (Lark.Tree)
+        """Get parse tree of B program as serializable tree (Lark.Tree)
 
         Args:
             source_program: The source B program as a string
@@ -125,7 +129,7 @@ def parse_source_program_as_string(source_program: str, pretty: bool = True, deb
 def get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AST_Node:
     sys.tracebacklimit = 0
     try:
-        """ Get AST of B program (Lark.Tree)
+        """Get AST of B program (Lark.Tree)
 
         Args:
             source_program: The source B program as a string
@@ -146,7 +150,7 @@ def get_source_program_as_ast(source_program: str, meta=False, debug=True) -> AS
 def get_source_program_symbol_table(source_program: str, debug=True) -> Symbol_Table:
     sys.tracebacklimit = 0
     try:
-        """ Get Symbol Table of Source Program
+        """Get Symbol Table of Source Program
 
         Args:
             source_program: The source B program as a string
@@ -164,10 +168,12 @@ def get_source_program_symbol_table(source_program: str, debug=True) -> Symbol_T
         raise Syntax_Error(f"{e}") from None
 
 
-def get_source_program_ast_as_string(source_program: str, meta=False, debug=True) -> str:
+def get_source_program_ast_as_string(
+    source_program: str, meta=False, debug=True
+) -> str:
     sys.tracebacklimit = 0
     try:
-        """ Get AST of B program as string
+        """Get AST of B program as string
 
         Args:
             source_program: The source B program as a string
@@ -188,7 +194,7 @@ def get_source_program_ast_as_string(source_program: str, meta=False, debug=True
 def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
     sys.tracebacklimit = 0
     try:
-        """ Get AST of B program as JSON
+        """Get AST of B program as JSON
 
         Args:
             source_program: The source B program as a string
@@ -209,7 +215,7 @@ def get_source_program_ast_as_json(source_program: str, meta=False, debug=True):
 def get_source_program_symbol_table_as_json(source_program: str, debug=True):
     sys.tracebacklimit = 0
     try:
-        """ Get Symbol Table of Source Program as JSON
+        """Get Symbol Table of Source Program as JSON
 
         Args:
             source_program: The source B program as a string

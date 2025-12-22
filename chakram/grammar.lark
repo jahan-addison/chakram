@@ -155,6 +155,8 @@ binary : "||" -> or_operator
 
 
 constant  : INT                  -> number_literal
+    | INT "." INT                -> double_literal
+    | INT ["." INT] "f"          -> float_literal
     | "'" ( CHAR ) ~ 1 .. 2 "'"  -> constant_literal
     | /\'\s\'/                   -> constant_literal
     | ESCAPED_STRING             -> string_literal
