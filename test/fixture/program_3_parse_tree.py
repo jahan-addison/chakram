@@ -1,8 +1,9 @@
 import pytest
 
-@pytest.fixture # type: ignore
+
+@pytest.fixture  # type: ignore
 def program_example_3_parse_tree() -> str:
-  return """program
+    return """program
   definition
     function_definition
       snide
@@ -42,7 +43,7 @@ def program_example_3_parse_tree() -> str:
                     None
                   rvalue
                     constant_expression
-                      number_literal    1
+                      integer_literal    1
               ;
             expression
               rvalue
@@ -67,7 +68,7 @@ def program_example_3_parse_tree() -> str:
   definition
     vector_definition
       mess
-      number_literal    5
+      integer_literal    5
       ival
         string_literal    "too bad"
       ival

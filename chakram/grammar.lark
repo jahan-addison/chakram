@@ -154,7 +154,7 @@ binary : "||" -> or_operator
 
 
 
-constant  : INT                  -> number_literal
+constant  : INT                  -> integer_literal
     | INT "." INT                -> double_literal
     | INT ["." INT] "f"          -> float_literal
     | "'" ( CHAR ) ~ 1 .. 2 "'"  -> constant_literal

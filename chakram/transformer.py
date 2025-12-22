@@ -390,9 +390,9 @@ class AST_Transformer(Transformer):
         """Constant Literal AST Node factory method."""
         return self.__construct_node(token, type, root, left=None, right=None)
 
-    def number_literal(self, args) -> AST_Node:
+    def integer_literal(self, args) -> AST_Node:
         return self.__construct_constant_node(
-            args, "number_literal", int("".join(args))
+            args, "integer_literal", int("".join(args))
         )
 
     def float_literal(self, args) -> AST_Node:
