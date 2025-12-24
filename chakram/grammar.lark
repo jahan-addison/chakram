@@ -4,7 +4,7 @@
 //              LALR(k) Grammar
 /////////////////////////////////////////////////////////////
 
-// License: CC0 license
+// License: CC0 https://creativecommons.org/public-domain/cc0/
 
 // Grammar syntax - https://lark-parser.readthedocs.io/en/stable/grammar.html
 
@@ -15,7 +15,7 @@ definition : function_definition
 
 vector_definition   :  NAME v_size (v_symbol ( ","? v_symbol ) * )? SEMI_COLON
 
-function_definition :  ( NAME "(" parameters ")" block_statement )
+function_definition :  ( NAME "(" parameters ")" function_body )
 
 parameters          :  [ rvalue (( "," rvalue ) *) ]
 
@@ -35,6 +35,20 @@ statement : block_statement
     | goto_statement
     | return_statement
     | rvalue_statement
+
+
+statement_2 : label_statement
+    | auto_statement
+    | extrn_statement
+    | if_statement
+    | while_statement
+    | switch_statement
+    | break_statement
+    | goto_statement
+    | rvalue_statement
+
+
+function_body      :  ( "{" ((statement_2) *  (return_statement) ?)  "}" )
 
 auto_statement     : "auto" lvalue ("," lvalue )* SEMI_COLON
 
@@ -154,19 +168,26 @@ binary : "||" -> or_operator
 
 
 
-constant  : INT                  -> integer_literal
+constant  :  FLOAT_CONSTANT      -> float_literal
     | INT "." INT                -> double_literal
-    | INT ["." INT] "f"          -> float_literal
+    | INT                        -> integer_literal
+    | BOOL_CONSTANT              -> bool_literal
     | "'" ( CHAR ) ~ 1 .. 2 "'"  -> constant_literal
     | /\'\s\'/                   -> constant_literal
     | ESCAPED_STRING             -> string_literal
 
 
+BOOL_CONSTANT : "true"
+    | "false"
+
+FLOAT_CONSTANT : INT ["." INT] "f"
+    | INT ["." INT] "F"
+
 EQUAL      : "="
 
 SEMI_COLON  : ";"
 
-NAME       : /[a-zA-Z_][a-zA-Z0-9_.]{0,7}/
+NAME       : /(?!true|false)[a-zA-Z_][a-zA-Z0-9_.]{0,7}/
 
 CHAR       : /[\x00-\x7F]/
 

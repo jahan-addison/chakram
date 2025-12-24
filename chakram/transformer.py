@@ -15,6 +15,7 @@ class _Meta(TypedDict):
     line: Union[int, None]
     type: NotRequired[str]
     size: NotRequired[int]
+    void: NotRequired[bool]
     column: Union[int, None]
     start_pos: Union[int, None]
     end_pos: Union[int, None]
@@ -164,6 +165,15 @@ class AST_Transformer(Transformer):
                 "end_pos": args[0].end_pos,
                 "end_column": args[0].end_column,
             }
+            # Does the body of this function have a return value?
+            if args[2]["left"] is not None and args[2]["left"][-1:] is not None:
+                if (
+                    len(args[2]["left"][-1:]) > 0
+                    and args[2]["left"][-1:][0]["root"] == "return"
+                ):
+                    self._symbol_table[str(args[0].value)]["void"] = False
+            else:
+                self._symbol_table[str(args[0].value)]["void"] = True
         return self.__construct_node(
             args,
             "function_definition",
@@ -191,10 +201,13 @@ class AST_Transformer(Transformer):
 
     """ Mutual-recursive Branches. """
 
-    def rvalue(self, args) -> AST_Node:
+    def statement(self, args) -> AST_Node:
         return args[0]
 
-    def statement(self, args) -> AST_Node:
+    def statement_2(self, args) -> AST_Node:
+        return args[0]
+
+    def rvalue(self, args) -> AST_Node:
         return args[0]
 
     def expression(self, args) -> AST_Node:
@@ -211,6 +224,9 @@ class AST_Transformer(Transformer):
     ) -> AST_Node:
         """Statement AST Node factory method."""
         return self.__construct_node(token, "statement", root, left=left, right=right)
+
+    def function_body(self, args) -> AST_Node:
+        return self.__construct_statement_node(args, "block", left=args)
 
     def block_statement(self, args) -> AST_Node:
         return self.__construct_statement_node(args, "block", left=args)
@@ -396,8 +412,12 @@ class AST_Transformer(Transformer):
         )
 
     def float_literal(self, args) -> AST_Node:
-        number = f"{args[0]}.{args[1]}"
-        return self.__construct_constant_node(args, "float_literal", float(number))
+        return self.__construct_constant_node(
+            args, "float_literal", float("".join(args)[:-1])
+        )
+
+    def bool_literal(self, args) -> AST_Node:
+        return self.__construct_constant_node(args, "bool_literal", "".join(args))
 
     def double_literal(self, args) -> AST_Node:
         number = f"{args[0]}.{args[1]}"

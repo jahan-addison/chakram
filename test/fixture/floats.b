@@ -1,3 +1,4 @@
 main() {
-  printf("%s %f %d %b %c", "hello", 5.55f, 3.141549, true, 'x');
+  auto x;
+  printf("%s %f %d %g %b %c", "hello", 5.55f, 10, 3.141549, true, 'x');
 }
