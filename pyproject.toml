@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "chakram"
-version = "1.2.13"
+version = "1.2.14"
 description = "Lexer, Parser for the B Language"
 authors = ["Jahan Addison"]
 
 [tool.flake8]
-max-line-length = 100
+max-line-length = 90
 
 [tool.poetry.dependencies]
 python = ">=3.11"
